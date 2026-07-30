@@ -4,6 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Ventas de activos obsoletos · 2025–2026</title>
+<meta name="description" content="Dashboard de ventas de activos obsoletos 2025–2026.">
+<link rel="icon" href="../assets/icons/favicon.svg" type="image/svg+xml">
 <style>
   :root {
     --bg: #0e1117;
@@ -60,10 +62,18 @@
   .pass { color: var(--ok); font-weight: 600; }
   .fail { color: var(--fail); font-weight: 600; }
   footer { color: var(--text-muted); font-size: 0.75rem; margin-top: 2rem; border-top: 1px solid var(--border); padding-top: 1rem; }
+  .portal-nav { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 1.25rem; }
+  .portal-nav a { color: var(--text-muted); border: 1px solid var(--border); border-radius: 8px; padding: 0.4rem 0.7rem; font-size: 0.78rem; text-decoration: none; }
+  .portal-nav a:hover, .portal-nav a[aria-current="page"] { color: var(--text); border-color: var(--accent); }
 </style>
 </head>
 <body>
 <div class="wrap">
+  <nav class="portal-nav" aria-label="Navegación del portal">
+    <a href="../">Inicio</a>
+    <a href="./" aria-current="page">Ventas</a>
+    <a href="../compras/">Compras</a>
+  </nav>
   <h1>Ventas de activos obsoletos · 2025–2026</h1>
   <p class="caption">Fuente 2026: Ventas.xlsx · última venta real: 29-07-2026 · snapshot estático generado desde datos trazables</p>
 
@@ -178,7 +188,7 @@
     <div class="table-scroll" id="table-pending"></div>
   </section>
 
-  <footer>Generado desde datos trazables. No se usan fechas de archivo ni posición de filas para determinar el año. Snapshot estático, sin servidor Python — para la versión interactiva, corre <code>streamlit run dashboard.py</code>.</footer>
+  <footer>Portal de Dashboards · Versión 1.0 · Actualizado 30-07-2026. Generado desde datos trazables. No se usan fechas de archivo ni posición de filas para determinar el año. Snapshot estático, sin servidor Python — para la versión interactiva, corre <code>streamlit run dashboard.py</code>.</footer>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
