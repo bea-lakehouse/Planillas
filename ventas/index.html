@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ventas de activos obsoletos · 2025–2026</title>
+<style>
+  :root {
+    --bg: #0e1117;
+    --surface: #161b22;
+    --surface-2: #1c2129;
+    --border: #30363d;
+    --text: #e6e6e6;
+    --text-muted: #8b949e;
+    --accent: #4c8bf5;
+    --warn-bg: #3b2e0f;
+    --warn-text: #f0c419;
+    --ok: #3fb950;
+    --fail: #f85149;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    line-height: 1.5;
+  }
+  .wrap { max-width: 1100px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
+  h1 { font-size: 1.6rem; font-weight: 600; margin: 0 0 0.25rem; }
+  .caption { color: var(--text-muted); font-size: 0.85rem; margin-bottom: 1.5rem; }
+  h2 { font-size: 1.15rem; font-weight: 600; margin: 0 0 1rem; }
+  h3 { font-size: 0.95rem; font-weight: 600; color: var(--text-muted); margin: 1.5rem 0 0.5rem; }
+  .tabs { display: flex; gap: 4px; border-bottom: 1px solid var(--border); margin-bottom: 1.5rem; overflow-x: auto; }
+  .tab-btn {
+    background: none; border: none; color: var(--text-muted);
+    padding: 0.6rem 1rem; font-size: 0.9rem; cursor: pointer;
+    border-bottom: 2px solid transparent; white-space: nowrap;
+  }
+  .tab-btn.active { color: var(--text); border-bottom-color: var(--accent); }
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+  .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; margin-bottom: 1.25rem; }
+  .kpi { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 0.9rem 1rem; }
+  .kpi .label { font-size: 0.75rem; color: var(--text-muted); margin-bottom: 4px; }
+  .kpi .value { font-size: 1.3rem; font-weight: 600; }
+  .kpi .value.up { color: var(--ok); }
+  .kpi .value.down { color: var(--fail); }
+  .banner { background: var(--warn-bg); color: var(--warn-text); border-radius: 8px; padding: 0.75rem 1rem; font-size: 0.85rem; margin-bottom: 1.25rem; }
+  .info { background: var(--surface-2); border: 1px solid var(--border); border-radius: 8px; padding: 0.75rem 1rem; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1.25rem; }
+  table { width: 100%; border-collapse: collapse; font-size: 0.82rem; margin-bottom: 1.5rem; }
+  th, td { text-align: left; padding: 6px 10px; border-bottom: 1px solid var(--border); white-space: nowrap; }
+  th { color: var(--text-muted); font-weight: 500; position: sticky; top: 0; background: var(--bg); }
+  tbody tr:hover { background: var(--surface); }
+  .table-scroll { overflow-x: auto; margin-bottom: 1.5rem; }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+  @media (max-width: 720px) { .grid-2 { grid-template-columns: 1fr; } }
+  .chart-box { position: relative; width: 100%; height: 260px; margin-bottom: 1rem; }
+  .chart-box.small { height: 200px; }
+  .pass { color: var(--ok); font-weight: 600; }
+  .fail { color: var(--fail); font-weight: 600; }
+  footer { color: var(--text-muted); font-size: 0.75rem; margin-top: 2rem; border-top: 1px solid var(--border); padding-top: 1rem; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Ventas de activos obsoletos · 2025–2026</h1>
+  <p class="caption">Fuente 2026: Ventas.xlsx · última venta real: 29-07-2026 · snapshot estático generado desde datos trazables</p>
+
+  <div class="tabs">
+    <button class="tab-btn active" data-tab="resumen">Resumen ejecutivo</button>
+    <button class="tab-btn" data-tab="v2025">Ventas 2025</button>
+    <button class="tab-btn" data-tab="v2026">Ventas 2026</button>
+    <button class="tab-btn" data-tab="comparativo">Comparativo</button>
+    <button class="tab-btn" data-tab="calidad">Calidad de datos</button>
+  </div>
+
+  <section id="resumen" class="tab-panel active">
+    <h2>Resumen ejecutivo</h2>
+    <div class="kpi-grid">
+      <div class="kpi"><div class="label">Cierre 2025 · baseline</div><div class="value">$17.648.675</div></div>
+      <div class="kpi"><div class="label">Ventas 2026 acumuladas</div><div class="value">$4.937.480</div></div>
+      <div class="kpi"><div class="label">Variación monto</div><div class="value down">-72.0%</div></div>
+      <div class="kpi"><div class="label">Variación equipos</div><div class="value down">-73.0%</div></div>
+    </div>
+    <div class="kpi-grid">
+      <div class="kpi"><div class="label">Equipos 2025</div><div class="value">89</div></div>
+      <div class="kpi"><div class="label">Equipos 2026</div><div class="value">24</div></div>
+      <div class="kpi"><div class="label">Ticket promedio 2025</div><div class="value">$198.300</div></div>
+      <div class="kpi"><div class="label">Ticket promedio 2026</div><div class="value">$205.728</div></div>
+    </div>
+    <div class="banner">El baseline 2025 es agregado. Ventas.xlsx contiene 91 vendidos sin fecha por $17.948.675, correspondientes al snapshot posterior; no se asignan artificialmente a 2025 ni a meses específicos.</div>
+    <div class="table-scroll">
+      <table>
+        <thead><tr><th>Periodo</th><th>Monto</th><th>Equipos</th><th>Ticket promedio</th></tr></thead>
+        <tbody>
+          <tr><td>Cierre 2025</td><td>$17.648.675</td><td>89</td><td>$198.300</td></tr>
+          <tr><td>2026 acumulado</td><td>$4.937.480</td><td>24</td><td>$205.728</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section id="v2025" class="tab-panel">
+    <h2>Ventas 2025 · baseline provisional</h2>
+    <div class="kpi-grid">
+      <div class="kpi"><div class="label">Monto con IVA</div><div class="value">$17.648.675</div></div>
+      <div class="kpi"><div class="label">Equipos</div><div class="value">89</div></div>
+      <div class="kpi"><div class="label">Apple</div><div class="value">54</div></div>
+      <div class="kpi"><div class="label">Windows</div><div class="value">35</div></div>
+    </div>
+    <div class="info">La suma mensual visible en el código es $17.391.675. Se conserva una diferencia de $257.000 como ajuste sin mes para cuadrar el baseline provisional de $17.648.675, sin inventar una fecha.</div>
+    <div class="chart-box"><canvas id="chart2025"></canvas></div>
+    <div class="table-scroll" id="table-recon"></div>
+  </section>
+
+  <section id="v2026" class="tab-panel">
+    <h2>Ventas 2026 · registros reales con fecha</h2>
+    <div class="kpi-grid">
+      <div class="kpi"><div class="label">Monto acumulado</div><div class="value">$4.937.480</div></div>
+      <div class="kpi"><div class="label">Equipos vendidos</div><div class="value">24</div></div>
+      <div class="kpi"><div class="label">Ticket promedio</div><div class="value">$205.728</div></div>
+      <div class="kpi"><div class="label">Última venta</div><div class="value">29-07-2026</div></div>
+    </div>
+    <h3>Evolución mensual</h3>
+    <div class="chart-box"><canvas id="chart2026"></canvas></div>
+    <div class="grid-2">
+      <div>
+        <h3>Plataforma</h3>
+        <div class="table-scroll" id="table-platform"></div>
+        <h3>Propietario</h3>
+        <div class="table-scroll" id="table-owner"></div>
+      </div>
+      <div>
+        <h3>Marca</h3>
+        <div class="table-scroll" id="table-brand"></div>
+        <h3>Modelo</h3>
+        <div class="table-scroll" id="table-model"></div>
+        <h3>Comprador</h3>
+        <div class="table-scroll" id="table-buyer"></div>
+      </div>
+    </div>
+    <h3>Registros individualizados</h3>
+    <div class="table-scroll" id="table-detail"></div>
+  </section>
+
+  <section id="comparativo" class="tab-panel">
+    <h2>Comparativo 2025 versus 2026</h2>
+    <p class="caption">Ventana comparable disponible: meses 03 a 07. Enero y febrero no existen en el histórico 2025.</p>
+    <div class="table-scroll">
+      <table>
+        <thead><tr><th>Periodo</th><th>Monto</th><th>Equipos</th><th>Ticket promedio</th><th>Apple</th><th>Windows</th></tr></thead>
+        <tbody>
+          <tr><td>2025 comparable</td><td>$7.600.766</td><td>38</td><td>$200.020</td><td>23</td><td>15</td></tr>
+          <tr><td>2026 comparable</td><td>$3.847.480</td><td>20</td><td>$192.374</td><td>9</td><td>11</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="chart-box"><canvas id="chartComparativo"></canvas></div>
+  </section>
+
+  <section id="calidad" class="tab-panel">
+    <h2>Calidad y trazabilidad</h2>
+    <div class="kpi-grid">
+      <div class="kpi"><div class="label">Vendidos sin fecha</div><div class="value">91</div></div>
+      <div class="kpi"><div class="label">Vendidos sin monto</div><div class="value">0</div></div>
+      <div class="kpi"><div class="label">Filas con serie duplicada</div><div class="value">2</div></div>
+      <div class="kpi"><div class="label">Filas con SKU duplicado</div><div class="value">2</div></div>
+    </div>
+    <h3>Estados</h3>
+    <div class="table-scroll" id="table-status"></div>
+    <h3>Controles</h3>
+    <div class="table-scroll" id="table-checks"></div>
+    <div class="info">91 registros vendidos sin fecha suman $17.948.675. Coinciden con la variante posterior de 91 equipos / $17.948.675, pero no permiten identificar de forma inequívoca los 89 equipos del baseline.</div>
+    <h3>Identificadores duplicados</h3>
+    <div class="table-scroll" id="table-dup"></div>
+    <h3>Registros disponibles o pendientes</h3>
+    <div class="table-scroll" id="table-pending"></div>
+  </section>
+
+  <footer>Generado desde datos trazables. No se usan fechas de archivo ni posición de filas para determinar el año. Snapshot estático, sin servidor Python — para la versión interactiva, corre <code>streamlit run dashboard.py</code>.</footer>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+const fmtCLP = (v) => "$" + Math.round(v).toLocaleString("es-CL");
+const muted = "#8b949e";
+const grid = { color: "rgba(139,148,158,0.15)" };
+
+document.querySelectorAll(".tab-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+    document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+    document.querySelectorAll(".tab-panel").forEach(p => p.classList.remove("active"));
+    btn.classList.add("active");
+    document.getElementById(btn.dataset.tab).classList.add("active");
+  });
+});
+
+function renderTable(containerId, columns, rows) {
+  const el = document.getElementById(containerId);
+  let html = "<table><thead><tr>" + columns.map(c => `<th>${c.label}</th>`).join("") + "</tr></thead><tbody>";
+  rows.forEach(row => {
+    html += "<tr>" + columns.map(c => `<td>${c.fmt ? c.fmt(row[c.key]) : (row[c.key] ?? "")}</td>`).join("") + "</tr>";
+  });
+  html += "</tbody></table>";
+  el.innerHTML = html;
+}
+
+const recon = [
+  {mes:"Marzo 2025", monto:1000101, equipos:5, apple:3, windows:2, dell:2, hp:0, lenovo:0, asus:0, ind:0, dif:5, conc:"Histórico agregado sin fechas individuales", fuente:"Hardware/Compras2025.py@2171604"},
+  {mes:"Abril 2025", monto:1400141, equipos:7, apple:4, windows:3, dell:2, hp:0, lenovo:1, asus:0, ind:0, dif:7, conc:"Histórico agregado sin fechas individuales", fuente:"Hardware/Compras2025.py@2171604"},
+  {mes:"Mayo 2025", monto:1600161, equipos:8, apple:5, windows:3, dell:1, hp:0, lenovo:2, asus:0, ind:0, dif:8, conc:"Histórico agregado sin fechas individuales", fuente:"Hardware/Compras2025.py@2171604"},
+  {mes:"Junio 2025", monto:1600161, equipos:8, apple:5, windows:3, dell:2, hp:0, lenovo:1, asus:0, ind:0, dif:8, conc:"Histórico agregado sin fechas individuales", fuente:"Hardware/Compras2025.py@2171604"},
+  {mes:"Julio 2025", monto:2000202, equipos:10, apple:6, windows:4, dell:2, hp:0, lenovo:2, asus:0, ind:0, dif:10, conc:"Histórico agregado sin fechas individuales", fuente:"Hardware/Compras2025.py@2171604"},
+  {mes:"Agosto 2025", monto:2400242, equipos:12, apple:8, windows:4, dell:2, hp:0, lenovo:2, asus:0, ind:0, dif:12, conc:"Histórico agregado sin fechas individuales", fuente:"Hardware/Compras2025.py@2171604"},
+  {mes:"Septiembre 2025", monto:2200222, equipos:11, apple:7, windows:4, dell:2, hp:0, lenovo:2, asus:0, ind:0, dif:11, conc:"Histórico agregado sin fechas individuales", fuente:"Hardware/Compras2025.py@2171604"},
+  {mes:"Octubre 2025", monto:2200222, equipos:11, apple:7, windows:4, dell:1, hp:2, lenovo:1, asus:0, ind:0, dif:11, conc:"Histórico agregado sin fechas individuales", fuente:"Hardware/Compras2025.py@2171604"},
+  {mes:"Noviembre 2025", monto:2200223, equipos:12, apple:8, windows:4, dell:1, hp:1, lenovo:2, asus:0, ind:0, dif:12, conc:"Histórico agregado sin fechas individuales", fuente:"Hardware/Compras2025.py@2171604"},
+  {mes:"Diciembre 2025", monto:790000, equipos:5, apple:1, windows:4, dell:2, hp:0, lenovo:0, asus:2, ind:0, dif:5, conc:"Histórico agregado sin fechas individuales", fuente:"Hardware/Compras2025.py@2171604"},
+  {mes:"Ajuste sin mes", monto:257000, equipos:0, apple:0, windows:0, dell:0, hp:0, lenovo:0, asus:0, ind:0, dif:0, conc:"Ajuste pendiente de asignación temporal", fuente:"Baseline 17648675 menos suma mensual 17391675"}
+];
+renderTable("table-recon", [
+  {key:"mes", label:"Mes"}, {key:"monto", label:"Monto histórico", fmt:fmtCLP}, {key:"equipos", label:"Equipos"},
+  {key:"apple", label:"Apple"}, {key:"windows", label:"Windows"}, {key:"dell", label:"Dell"}, {key:"hp", label:"HP"},
+  {key:"lenovo", label:"Lenovo"}, {key:"asus", label:"Asus"}, {key:"ind", label:"Individualizados Excel"},
+  {key:"dif", label:"Diferencia"}, {key:"conc", label:"Conciliación"}, {key:"fuente", label:"Fuente"}
+], recon);
+
+new Chart(document.getElementById("chart2025"), {
+  type: "bar",
+  data: { labels: recon.slice(0,10).map(r => r.mes), datasets: [{ data: recon.slice(0,10).map(r => r.monto), backgroundColor: "#4c8bf5", borderRadius: 3 }] },
+  options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } },
+    scales: { x: { grid: { display: false }, ticks: { color: muted, maxRotation: 45, autoSkip: false } }, y: { grid, ticks: { color: muted, callback: v => "$" + (v/1e6).toFixed(1) + "M" } } } }
+});
+
+const m2026 = [
+  {mes:"2026-01", monto:690000, equipos:3}, {mes:"2026-02", monto:400000, equipos:1}, {mes:"2026-03", monto:260000, equipos:2},
+  {mes:"2026-04", monto:1200000, equipos:5}, {mes:"2026-05", monto:900000, equipos:4}, {mes:"2026-06", monto:130000, equipos:1},
+  {mes:"2026-07", monto:1357480, equipos:8}
+];
+new Chart(document.getElementById("chart2026"), {
+  type: "bar",
+  data: { labels: m2026.map(r => r.mes), datasets: [{ data: m2026.map(r => r.monto), backgroundColor: "#4c8bf5", borderRadius: 3 }] },
+  options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } },
+    scales: { x: { grid: { display: false }, ticks: { color: muted } }, y: { grid, ticks: { color: muted, callback: v => "$" + (v/1e6).toFixed(1) + "M" } } } }
+});
+
+renderTable("table-platform", [{key:"p", label:"Plataforma"}, {key:"e", label:"Equipos"}, {key:"m", label:"Monto", fmt:fmtCLP}], [
+  {p:"Apple", e:12, m:3267480}, {p:"Windows", e:12, m:1670000}
+]);
+renderTable("table-brand", [{key:"b", label:"Marca"}, {key:"e", label:"Equipos"}, {key:"m", label:"Monto", fmt:fmtCLP}], [
+  {b:"Apple", e:12, m:3267480}, {b:"Dell", e:11, m:1520000}, {b:"Asus", e:1, m:150000}
+]);
+renderTable("table-model", [{key:"mo", label:"Modelo"}, {key:"e", label:"Equipos"}, {key:"m", label:"Monto", fmt:fmtCLP}], [
+  {mo:"MacBook Pro - Model A2141", e:7, m:2399740}, {mo:"Latitude 7400", e:10, m:1370000},
+  {mo:"MacBook Air - Model A2337", e:4, m:737740}, {mo:"Latitude 5420", e:1, m:150000},
+  {mo:"ZenBook 14 UX435E", e:1, m:150000}, {mo:"MacBook Pro- Model A1990", e:1, m:130000}
+]);
+renderTable("table-buyer", [{key:"c", label:"Comprador"}, {key:"e", label:"Equipos"}, {key:"m", label:"Monto", fmt:fmtCLP}], [
+  {c:"Inversiones Siervo Espinosa Ltda", e:10, m:1320000}, {c:"Belgica Bueno", e:3, m:800000},
+  {c:"Alejandra Muñoz", e:2, m:500000}, {c:"Jorge Leiva", e:1, m:400000}, {c:"Maycoll Catalan - Bupa", e:1, m:400000},
+  {c:"Nicolás González Arias", e:1, m:400000}, {c:"Mateo Giordano", e:1, m:299740}, {c:"Diana Ramos", e:2, m:280000},
+  {c:"Reymundo Sánchez", e:1, m:200000}, {c:"Romina Bustelo", e:1, m:187740}, {c:"Daniela Buscaglia", e:1, m:150000}
+]);
+renderTable("table-owner", [{key:"p", label:"Propiedad"}, {key:"e", label:"Equipos"}, {key:"m", label:"Monto", fmt:fmtCLP}], [
+  {p:"Acid", e:23, m:4737480}, {p:"Linets", e:1, m:200000}
+]);
+
+const detail = [
+  {f:"29-07-2026", ma:"Apple", mo:"MacBook Pro - Model A2141", so:"Tahoe 26.2", serie:"C02DCDZUMD6M", sku:"183", prop:"Acid", comp:"Mateo Giordano", monto:299740, clas:"Obsoleto", com:""},
+  {f:"28-07-2026", ma:"Apple", mo:"MacBook Air - Model A2337", so:"Sonoma 14.5", serie:"FVFF5VCGQ6L7", sku:"205", prop:"Acid", comp:"Belgica Bueno", monto:200000, clas:"Obsoleto", com:"Fabián Arias venta realizada a externo."},
+  {f:"28-07-2026", ma:"Apple", mo:"MacBook Air - Model A2337", so:"Sequoia 15.2", serie:"FVFF5VCXQ6L7", sku:"320", prop:"Linets", comp:"Belgica Bueno", monto:200000, clas:"Obsoleto", com:"Fabián Arias venta realizada a externo."},
+  {f:"24-07-2026", ma:"Apple", mo:"MacBook Air - Model A2337", so:"Tahoe 26.2", serie:"CO2K81HLQ6L7", sku:"367", prop:"Acid", comp:"Romina Bustelo", monto:187740, clas:"Obsoleto", com:""},
+  {f:"24-07-2026", ma:"Asus", mo:"ZenBook 14 UX435E", so:"windows 11 Home", serie:"LCN0CX19K469526", sku:"213", prop:"Acid", comp:"Inversiones Siervo Espinosa Ltda", monto:150000, clas:"Obsoleto", com:"Fabián Arias venta realizada a externo."},
+  {f:"24-07-2026", ma:"Dell", mo:"Latitude 7400", so:"windows 11 Pro", serie:"JQY8l33", sku:"40", prop:"Acid", comp:"Inversiones Siervo Espinosa Ltda", monto:40000, clas:"Obsoleto", com:"Fabián Arias venta realizada a externo."},
+  {f:"24-07-2026", ma:"Dell", mo:"Latitude 7400", so:"windows 11 Pro", serie:"DVH9l33", sku:"181", prop:"Acid", comp:"Inversiones Siervo Espinosa Ltda", monto:140000, clas:"Obsoleto", com:"Fabián Arias venta realizada a externo."},
+  {f:"24-07-2026", ma:"Dell", mo:"Latitude 7400", so:"windows 11 Pro", serie:"8FQ2733", sku:"195", prop:"Acid", comp:"Inversiones Siervo Espinosa Ltda", monto:140000, clas:"Obsoleto", com:"Fabián Arias venta realizada a externo."},
+  {f:"09-06-2026", ma:"Apple", mo:"MacBook Pro- Model A1990", so:"Sequoia 15.0", serie:"C02X62LVJG5L", sku:"36", prop:"Acid", comp:"Diana Ramos", monto:130000, clas:"Obsoleto", com:"Fabián Arias venta realizada a externo."},
+  {f:"29-05-2026", ma:"Dell", mo:"Latitude 7400", so:"Windows 11 Pro", serie:"2KWTK13", sku:"113", prop:"Acid", comp:"Daniela Buscaglia", monto:150000, clas:"Obsoleto", com:"Fabián Arias venta realizada a colaborador."},
+  {f:"20-05-2026", ma:"Apple", mo:"MacBook Pro - Model A2141", so:"Sequoia 15.1", serie:"C02FJ1GUMD6M", sku:"224", prop:"Acid", comp:"Nicolás González Arias", monto:400000, clas:"Obsoleto", com:"Fabián Arias venta realizada a colaborador."},
+  {f:"20-05-2026", ma:"Dell", mo:"Latitude 7400", so:"Windows 11 Pro", serie:"H4W2733", sku:"193", prop:"Acid", comp:"Diana Ramos", monto:150000, clas:"Obsoleto", com:"Fabián Arias venta realizada a externo."},
+  {f:"12-05-2026", ma:"Dell", mo:"Latitude 7400", so:"windows 10 Pro", serie:"3BR3733", sku:"188", prop:"Acid", comp:"Reymundo Sánchez", monto:200000, clas:"Obsoleto", com:"Fabián Arias venta realizada a colaborador."},
+  {f:"23-04-2026", ma:"Apple", mo:"MacBook Pro - Model A2141", so:"Tahoe 26.2", serie:"C02FJ1PJMD6M", sku:"256", prop:"Acid", comp:"Jorge Leiva", monto:400000, clas:"Obsoleto", com:"Fabián Arias venta realizada a colaborador."},
+  {f:"10-04-2026", ma:"Apple", mo:"MacBook Pro - Model A2141", so:"Sequoia 15.3.1", serie:"C02C33GAMD6M", sku:"121", prop:"Acid", comp:"Alejandra Muñoz", monto:250000, clas:"Obsoleto", com:"Fabián Arias venta realizada a colaborador."},
+  {f:"06-04-2026", ma:"Apple", mo:"MacBook Pro - Model A2141", so:"Tahoe 26.2", serie:"C02CDARCMD6M", sku:"132", prop:"Acid", comp:"Alejandra Muñoz", monto:250000, clas:"Obsoleto", com:"Fabián Arias venta realizada a colaborador."},
+  {f:"03-04-2026", ma:"Dell", mo:"Latitude 7400", so:"windows 10 Pro", serie:"HBZSK13", sku:"129", prop:"Acid", comp:"Inversiones Siervo Espinosa Ltda", monto:150000, clas:"Obsoleto", com:"Fabián Arias venta realizada a externo."},
+  {f:"03-04-2026", ma:"Dell", mo:"Latitude 5420", so:"Windows 11 Pro", serie:"95H39C3", sku:"208", prop:"Acid", comp:"Inversiones Siervo Espinosa Ltda", monto:150000, clas:"Obsoleto", com:"Fabián Arias venta realizada a externo."},
+  {f:"25-03-2026", ma:"Dell", mo:"Latitude 7400", so:"Windows 11", serie:"518TK13", sku:"117", prop:"Acid", comp:"Inversiones Siervo Espinosa Ltda", monto:130000, clas:"Obsoleto", com:"Fabián Arias venta realizada a externo."},
+  {f:"25-03-2026", ma:"Dell", mo:"Latitude 7400", so:"Windows 11", serie:"61TSK13", sku:"114", prop:"Acid", comp:"Inversiones Siervo Espinosa Ltda", monto:130000, clas:"Obsoleto", com:"Fabián Arias venta realizada a externo."},
+  {f:"19-02-2026", ma:"Apple", mo:"MacBook Pro - Model A2141", so:"Tahoe 26.2", serie:"CO2CDAQUMD6M", sku:"148", prop:"Acid", comp:"Belgica Bueno", monto:400000, clas:"Obsoleto", com:"venta realizada al colaborador."},
+  {f:"27-01-2026", ma:"Apple", mo:"MacBook Pro - Model A2141", so:"", serie:"C02C33G6MD6M", sku:"122", prop:"Acid", comp:"Maycoll Catalan - Bupa", monto:400000, clas:"Obsoleto", com:"venta realizada al colaborador."},
+  {f:"20-01-2026", ma:"Dell", mo:"Latitude 7400", so:"windows 11 Pro", serie:"FTVTK13", sku:"137", prop:"Acid", comp:"Inversiones Siervo Espinosa Ltda", monto:140000, clas:"Obsoleto", com:"Fabián Arias venta realizada a externo."},
+  {f:"20-01-2026", ma:"Apple", mo:"MacBook Air - Model A2337", so:"Sonoma 14.5", serie:"CO2K8058Q6L7", sku:"366", prop:"Acid", comp:"Inversiones Siervo Espinosa Ltda", monto:150000, clas:"Obsoleto", com:"Fabián Arias venta realizada a externo."}
+];
+renderTable("table-detail", [
+  {key:"f", label:"Fecha de Venta"}, {key:"ma", label:"Marca"}, {key:"mo", label:"Modelo"}, {key:"so", label:"Sistema Operativo"},
+  {key:"serie", label:"Nro. Serie"}, {key:"sku", label:"SKU"}, {key:"prop", label:"Propiedad"}, {key:"comp", label:"Comprador"},
+  {key:"monto", label:"Monto de Venta", fmt:fmtCLP}, {key:"clas", label:"Clasificación"}, {key:"com", label:"Comentario"}
+], detail);
+
+new Chart(document.getElementById("chartComparativo"), {
+  type: "bar",
+  data: {
+    labels: ["Mar","Abr","May","Jun","Jul"],
+    datasets: [
+      { label: "2025", data: [1000101,1400141,1600161,1600161,2000202], backgroundColor: "#4c8bf5", borderRadius: 3 },
+      { label: "2026", data: [260000,1200000,900000,130000,1357480], backgroundColor: "#f0883e", borderRadius: 3 }
+    ]
+  },
+  options: { responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { labels: { color: muted } } },
+    scales: { x: { grid: { display: false }, ticks: { color: muted } }, y: { grid, ticks: { color: muted, callback: v => "$" + (v/1e6).toFixed(1) + "M" } } } }
+});
+
+renderTable("table-status", [{key:"e", label:"Estado"}, {key:"r", label:"Registros"}], [
+  {e:"Vendido", r:115}, {e:"Disponible", r:4}, {e:"Asignado", r:2}, {e:"reservado", r:2}, {e:"Prestamo", r:1}
+]);
+
+const checks = [
+  ["baseline_monto_2025", true], ["baseline_equipos_2025", true], ["baseline_apple_2025", true],
+  ["baseline_windows_2025", true], ["apple_mas_windows_2025", true], ["marcas_windows_2025", true],
+  ["apple_mas_windows_2026", true], ["ventas_2026_con_fecha", true], ["ventas_2026_con_monto", true],
+  ["sin_mezcla_2025_2026", true], ["kpi_2026_trazable", true]
+];
+document.getElementById("table-checks").innerHTML = "<table><thead><tr><th>Control</th><th>Resultado</th></tr></thead><tbody>" +
+  checks.map(([name, pass]) => `<tr><td>${name}</td><td class="${pass ? "pass" : "fail"}">${pass ? "PASS" : "FAIL"}</td></tr>`).join("") +
+  "</tbody></table>";
+
+renderTable("table-dup", [{key:"e", label:"Estado"}, {key:"f", label:"Fecha de Venta"}, {key:"serie", label:"Nro. Serie"}, {key:"sku", label:"SKU"}, {key:"ma", label:"Marca"}, {key:"mo", label:"Modelo"}, {key:"comp", label:"Comprador"}, {key:"monto", label:"Monto de Venta", fmt: v => v ? fmtCLP(v) : ""}], [
+  {e:"Asignado", f:"", serie:"C02FJ1GUMD6M", sku:"224", ma:"Apple", mo:"MacBook Pro - Model A2141", comp:"Nicolás González", monto:null},
+  {e:"Vendido", f:"20-05-2026", serie:"C02FJ1GUMD6M", sku:"224", ma:"Apple", mo:"MacBook Pro - Model A2141", comp:"Nicolás González Arias", monto:400000}
+]);
+
+renderTable("table-pending", [{key:"e", label:"Estado"}, {key:"ma", label:"Marca"}, {key:"mo", label:"Modelo"}, {key:"serie", label:"Nro. Serie"}, {key:"sku", label:"SKU"}, {key:"prop", label:"Propiedad"}, {key:"comp", label:"Comprador"}], [
+  {e:"Prestamo", ma:"Apple", mo:"MacBook Pro - Model A1398", serie:"CO2PV0QSG8WP", sku:"33", prop:"Acid", comp:""},
+  {e:"Asignado", ma:"Apple", mo:"MacBook Pro - Model A2141", serie:"C02FJ1GUMD6M", sku:"224", prop:"Acid", comp:"Nicolás González"},
+  {e:"Asignado", ma:"Apple", mo:"MacBook Pro - Model A2141", serie:"C02FJ9ENMD6M", sku:"240", prop:"Acid", comp:""},
+  {e:"Disponible", ma:"Apple", mo:"MacBook Pro - Model A1398", serie:"C02TK4Q4G8WN", sku:"72", prop:"Acid", comp:""},
+  {e:"Disponible", ma:"Apple", mo:"MacBook Pro - Model A2141", serie:"C02C33FYMD6M", sku:"102", prop:"Acid", comp:""},
+  {e:"Disponible", ma:"Apple", mo:"MacBook Pro - Model A2141", serie:"C02CDAP6MD6M", sku:"133", prop:"Acid", comp:""},
+  {e:"reservado", ma:"Apple", mo:"MacBook Pro - Model A2141", serie:"C02FJ1GYMD6M", sku:"225", prop:"Acid", comp:"Daniel Vargas"},
+  {e:"reservado", ma:"Apple", mo:"MacBook Pro - Model A2141", serie:"C02FJ1E8MD6M", sku:"227", prop:"Acid", comp:"Bea Herrera"},
+  {e:"Disponible", ma:"Apple", mo:"MacBook Pro - Model A1502", serie:"C17NV36YG3QH", sku:"445", prop:"Linets", comp:""}
+]);
+</script>
+</body>
+</html>
