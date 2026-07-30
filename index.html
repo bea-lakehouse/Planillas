@@ -1,0 +1,1089 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Proyección de Compra de Computadores — Acid Labs</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.4/chart.umd.min.js"></script>
+<style>
+  :root{
+    --bg:#0b1220;
+    --panel:#111a2e;
+    --panel-2:#0e1626;
+    --border:#22304a;
+    --text:#e8edf7;
+    --muted:#93a2c0;
+    --accent:#5b9dff;
+    --accent-2:#7c5cff;
+    --green:#3ddc97;
+    --amber:#ffb84d;
+    --red:#ff6b6b;
+    --card-radius:16px;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:radial-gradient(1200px 600px at 10% -10%, #16224a 0%, var(--bg) 45%), var(--bg);
+    color:var(--text);
+    font-family:"Segoe UI", -apple-system, BlinkMacSystemFont, Roboto, Helvetica, Arial, sans-serif;
+    line-height:1.55;
+  }
+  a{color:var(--accent);}
+  .wrap{max-width:1180px;margin:0 auto;padding:0 24px 80px;}
+
+  /* NAV */
+  nav.topnav{
+    position:sticky;top:0;z-index:50;
+    background:rgba(11,18,32,0.9);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--border);
+  }
+  nav.topnav .inner{
+    max-width:1180px;margin:0 auto;padding:14px 24px;
+    display:flex;align-items:center;gap:18px;flex-wrap:wrap;
+  }
+  nav.topnav .brand{font-weight:700;font-size:15px;letter-spacing:.3px;margin-right:auto;color:#fff;}
+  nav.topnav .brand span{color:var(--accent);}
+  nav.topnav a.navlink{
+    color:var(--muted);text-decoration:none;font-size:13.5px;
+    padding:6px 10px;border-radius:8px;white-space:nowrap;
+  }
+  nav.topnav a.navlink:hover{color:#fff;background:var(--panel);}
+
+  /* HERO */
+  header.hero{padding:56px 24px 30px;text-align:left;}
+  header.hero .eyebrow{
+    display:inline-block;color:var(--accent);font-size:12.5px;font-weight:700;
+    letter-spacing:1.2px;text-transform:uppercase;margin-bottom:14px;
+    border:1px solid rgba(91,157,255,.35);padding:5px 12px;border-radius:999px;
+    background:rgba(91,157,255,.08);
+  }
+  header.hero h1{font-size:clamp(28px,4vw,42px);margin:0 0 12px;color:#fff;font-weight:800;letter-spacing:-0.5px;}
+  header.hero p.sub{color:var(--muted);font-size:16px;max-width:760px;margin:0 0 26px;}
+  .meta-row{display:flex;gap:22px;flex-wrap:wrap;color:var(--muted);font-size:13.5px;}
+  .meta-row b{color:#fff;}
+
+  /* SECTION generic */
+  section{padding:46px 0;border-top:1px solid var(--border);}
+  section:first-of-type{border-top:none;}
+  h2.sec-title{
+    font-size:22px;color:#fff;margin:0 0 6px;font-weight:800;
+    display:flex;align-items:center;gap:10px;
+  }
+  h2.sec-title .num{
+    display:inline-flex;align-items:center;justify-content:center;
+    width:30px;height:30px;border-radius:9px;background:linear-gradient(135deg,var(--accent),var(--accent-2));
+    color:#fff;font-size:14px;font-weight:800;flex:0 0 auto;
+  }
+  p.sec-desc{color:var(--muted);font-size:14.5px;margin:0 0 26px;max-width:820px;}
+  h3.sub-title{font-size:16px;color:#fff;margin:32px 0 14px;font-weight:700;}
+  h4.mini-title{font-size:14px;color:var(--muted);margin:22px 0 10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;}
+
+  /* KPI CARDS */
+  .kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:16px;margin-bottom:8px;}
+  .kpi-card{
+    background:linear-gradient(180deg,var(--panel),var(--panel-2));
+    border:1px solid var(--border);border-radius:var(--card-radius);
+    padding:20px 20px 18px;position:relative;overflow:hidden;
+  }
+  .kpi-card.recommended{border-color:rgba(61,220,151,.5);box-shadow:0 0 0 1px rgba(61,220,151,.15) inset;}
+  .kpi-card .tag{
+    position:absolute;top:14px;right:14px;font-size:10.5px;font-weight:800;
+    letter-spacing:.5px;text-transform:uppercase;padding:3px 9px;border-radius:999px;
+  }
+  .tag.green{background:rgba(61,220,151,.15);color:var(--green);}
+  .tag.amber{background:rgba(255,184,77,.15);color:var(--amber);}
+  .tag.blue{background:rgba(91,157,255,.15);color:var(--accent);}
+  .kpi-card .label{color:var(--muted);font-size:13px;margin-bottom:6px;}
+  .kpi-card .value{font-size:32px;font-weight:800;color:#fff;letter-spacing:-.5px;}
+  .kpi-card .value small{font-size:14px;color:var(--muted);font-weight:600;margin-left:4px;}
+  .kpi-card .foot{margin-top:10px;font-size:12.5px;color:var(--muted);}
+
+  /* TIMELINE */
+  .timeline{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;}
+  @media(max-width:820px){.timeline{grid-template-columns:1fr;}}
+  .tl-card{background:var(--panel);border:1px solid var(--border);border-radius:var(--card-radius);padding:20px;}
+  .tl-card .tl-num{
+    width:34px;height:34px;border-radius:10px;background:rgba(91,157,255,.12);color:var(--accent);
+    display:flex;align-items:center;justify-content:center;font-weight:800;margin-bottom:12px;
+  }
+  .tl-card h4{margin:0 0 8px;color:#fff;font-size:15px;}
+  .tl-card p{margin:0;color:var(--muted);font-size:13.5px;}
+  .tl-card .result{
+    margin-top:12px;padding:10px 12px;background:var(--panel-2);border-radius:10px;
+    font-size:13px;color:var(--text);border-left:3px solid var(--accent);
+  }
+
+  /* CARDS ROW */
+  .card-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;}
+  .info-card{background:var(--panel);border:1px solid var(--border);border-radius:var(--card-radius);padding:18px 20px;}
+  .info-card h5{margin:0 0 10px;color:#fff;font-size:14px;}
+  .info-card ul{margin:0;padding-left:18px;color:var(--muted);font-size:13.5px;}
+  .info-card ul li{margin-bottom:6px;}
+
+  /* TABLES */
+  .table-wrap{overflow-x:auto;border:1px solid var(--border);border-radius:14px;background:var(--panel);}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;min-width:520px;}
+  thead th{
+    text-align:left;background:var(--panel-2);color:var(--muted);
+    font-size:11.5px;text-transform:uppercase;letter-spacing:.5px;
+    padding:12px 16px;border-bottom:1px solid var(--border);white-space:nowrap;
+  }
+  tbody td{padding:11px 16px;border-bottom:1px solid var(--border);color:var(--text);white-space:nowrap;}
+  tbody tr:last-child td{border-bottom:none;}
+  tbody tr:hover{background:rgba(91,157,255,.04);}
+  td.num, th.num{text-align:right;font-variant-numeric:tabular-nums;}
+  tr.highlight td{background:rgba(61,220,151,.06);font-weight:700;}
+  .badge{display:inline-block;padding:3px 10px;border-radius:999px;font-size:11.5px;font-weight:700;}
+  .badge.green{background:rgba(61,220,151,.15);color:var(--green);}
+  .badge.amber{background:rgba(255,184,77,.15);color:var(--amber);}
+  .badge.red{background:rgba(255,107,107,.15);color:var(--red);}
+  .badge.blue{background:rgba(91,157,255,.15);color:var(--accent);}
+  .badge.muted{background:rgba(147,162,192,.15);color:var(--muted);}
+
+  /* CHART BOX */
+  .chart-box{background:var(--panel);border:1px solid var(--border);border-radius:var(--card-radius);padding:20px;}
+  .chart-box h5{margin:0 0 4px;color:#fff;font-size:14.5px;}
+  .chart-box .chart-desc{color:var(--muted);font-size:12.5px;margin:0 0 16px;}
+  .chart-grid-2{display:grid;grid-template-columns:1.3fr 1fr;gap:18px;}
+  @media(max-width:900px){.chart-grid-2{grid-template-columns:1fr;}}
+  canvas{max-width:100%;}
+
+  /* CALLOUT */
+  .callout{
+    border-radius:14px;padding:18px 20px;border:1px solid var(--border);
+    background:linear-gradient(135deg, rgba(91,157,255,.08), rgba(124,92,255,.05));
+    font-size:14px;color:var(--text);
+  }
+  .callout.warn{background:linear-gradient(135deg, rgba(255,184,77,.1), rgba(255,107,107,.05));border-color:rgba(255,184,77,.3);}
+  .callout.good{background:linear-gradient(135deg, rgba(61,220,151,.1), rgba(61,220,151,.03));border-color:rgba(61,220,151,.3);}
+  .callout b{color:#fff;}
+
+  /* STRATEGY BOX */
+  .strategy-box{
+    background:linear-gradient(180deg, rgba(61,220,151,.08), transparent);
+    border:1px solid rgba(61,220,151,.35);border-radius:18px;padding:26px;margin-top:10px;
+  }
+  .strategy-box h3{color:var(--green);margin:0 0 14px;font-size:17px;}
+  .strategy-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin-top:16px;}
+  .strategy-grid div{background:rgba(0,0,0,.15);border-radius:10px;padding:12px 14px;font-size:13px;color:var(--text);}
+  .strategy-grid div b{display:block;color:var(--green);font-size:12px;margin-bottom:4px;text-transform:uppercase;letter-spacing:.3px;}
+
+  /* QUOTE for leadership */
+  .quote-box{
+    background:var(--panel);border-left:4px solid var(--accent);border-radius:0 14px 14px 0;
+    padding:20px 24px;
+  }
+  .quote-box p{margin:0 0 10px;font-size:14px;color:var(--text);}
+  .quote-box p:last-child{margin-bottom:0;}
+
+  /* TABS */
+  .tabs{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;}
+  .tab-btn{
+    background:var(--panel-2);border:1px solid var(--border);color:var(--muted);
+    padding:8px 16px;border-radius:999px;font-size:13px;font-weight:600;cursor:pointer;
+  }
+  .tab-btn.active{background:var(--accent);color:#fff;border-color:var(--accent);}
+  .tab-panel{display:none;}
+  .tab-panel.active{display:block;}
+
+  footer{padding:40px 24px;text-align:center;color:var(--muted);font-size:12.5px;border-top:1px solid var(--border);}
+
+  .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+  @media(max-width:820px){.grid-2{grid-template-columns:1fr;}}
+
+  .small-note{color:var(--muted);font-size:12px;margin-top:10px;font-style:italic;}
+</style>
+</head>
+<body>
+
+<nav class="topnav">
+  <div class="inner">
+    <div class="brand">Acid Labs <span>· Compras TI</span></div>
+    <a class="navlink" href="#resumen">Resumen</a>
+    <a class="navlink" href="#iteracion1">Iteración 1</a>
+    <a class="navlink" href="#iteracion2">Iteración 2</a>
+    <a class="navlink" href="#iteracion3">Iteración 3</a>
+    <a class="navlink" href="#estrategia">Estrategia</a>
+    <a class="navlink" href="#recomendacion">Recomendación final</a>
+    <a class="navlink" href="#actualizacion" style="color:#3ddc97;">🔄 Actualización Core 2Brains</a>
+  </div>
+</nav>
+
+<header class="hero wrap">
+  <span class="eyebrow">Informe ejecutivo · TI / Compras / Finanzas</span>
+  <h1>Proyección de compra de computadores<br>Acid Labs — Agosto a Diciembre 2026</h1>
+  <p class="sub">Tres iteraciones sucesivas del modelo de proyección, desde un diagnóstico inicial optimista hasta una recomendación técnica, financiera y comercial validada, para responder una pregunta de jefatura: ¿cuántos equipos comprar en una sola orden?</p>
+  <div class="meta-row">
+    <div>📅 Fecha de corte: <b>30 de julio de 2026</b></div>
+    <div>🎯 Rango operacional Acid Labs: <b>85 – 115 equipos</b></div>
+    <div>✅ Compra base Acid: <b>100 equipos</b></div>
+  </div>
+  <div style="margin-top:18px;">
+    <a href="#actualizacion" style="display:inline-flex;align-items:center;gap:8px;text-decoration:none;background:rgba(61,220,151,.1);border:1px solid rgba(61,220,151,.35);color:var(--green);font-size:13px;font-weight:700;padding:8px 16px;border-radius:999px;">
+      🔄 Actualizado: incorpora 10 MacBook Air M5 de Core 2Brains — ver consolidado de hasta 125 equipos
+    </a>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <!-- ===================== RESUMEN ===================== -->
+  <section id="resumen">
+    <h2 class="sec-title"><span class="num">★</span>Resumen ejecutivo</h2>
+    <p class="sec-desc">La cifra inicial de 130 equipos resultó estar sobreestimada por supuestos optimistas. Tras corregir el modelo y evaluar la conveniencia financiera, la recomendación final equilibra cobertura operacional, liquidez y capacidad de negociación.</p>
+
+    <div class="kpi-grid">
+      <div class="kpi-card recommended">
+        <span class="tag green">Compra base</span>
+        <div class="label">Escenario recomendado</div>
+        <div class="value">100 <small>equipos</small></div>
+        <div class="foot">Total con IVA: $212.914.431 · Stock final: 4 · Mejor equilibrio financiero</div>
+      </div>
+      <div class="kpi-card">
+        <span class="tag blue">Negociar</span>
+        <div class="label">Techo presupuestario</div>
+        <div class="value">115 <small>equipos</small></div>
+        <div class="foot">Total con IVA: $244.496.891 · Conviene con descuento ≥ 3,23%</div>
+      </div>
+      <div class="kpi-card">
+        <span class="tag amber">Contingencia</span>
+        <div class="label">Escenario holgado</div>
+        <div class="value">130 <small>equipos</small></div>
+        <div class="foot">Total con IVA: $276.270.008 · Inmoviliza ~$60,8M en stock</div>
+      </div>
+    </div>
+
+    <div class="kpi-card" style="margin-top:16px;">
+      <span class="tag blue">Mix recomendado · 55/35/10</span>
+      <div class="label">Distribución por plataforma, según escenario — incluye Core 2Brains</div>
+      <div class="table-wrap" style="border:none;background:transparent;margin-top:10px;">
+        <table style="min-width:0;">
+          <thead><tr><th>Escenario</th><th class="num">MBP Acid</th><th class="num">Windows Acid</th><th class="num">MBA Acid</th><th class="num">MBA Core 2Brains</th><th class="num">MBA total</th><th class="num">Total Acid</th><th class="num">Total consolidado</th></tr></thead>
+          <tbody>
+            <tr class="highlight"><td>Base</td><td class="num">55</td><td class="num">35</td><td class="num">10</td><td class="num">10</td><td class="num">20</td><td class="num">100</td><td class="num">110</td></tr>
+            <tr><td>Recomendado</td><td class="num">63</td><td class="num">40</td><td class="num">12</td><td class="num">10</td><td class="num">22</td><td class="num">115</td><td class="num">125</td></tr>
+            <tr><td>Holgado</td><td class="num">71</td><td class="num">46</td><td class="num">13</td><td class="num">10</td><td class="num">23</td><td class="num">130</td><td class="num">140</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="foot" style="margin-top:10px;">Proporción fija 55% / 35% / 10% sobre el volumen Acid Labs (redondeada a la unidad más cercana). Los 10 MacBook Air M5 de Core 2Brains se suman aparte, sin alterar el mix Acid ni consumir contingencia.</div>
+
+      <div class="table-wrap" style="border:none;background:transparent;margin-top:16px;">
+        <table style="min-width:0;">
+          <thead><tr><th>Presupuesto consolidado</th><th class="num">Neto</th><th class="num">IVA</th><th class="num">Total con IVA</th></tr></thead>
+          <tbody>
+            <tr class="highlight"><td>Base — 110 equipos</td><td class="num">$190.574.520</td><td class="num">$36.209.159</td><td class="num">$226.783.679</td></tr>
+            <tr><td>Recomendado — 125 equipos</td><td class="num">$217.114.402</td><td class="num">$41.251.737</td><td class="num">$258.366.139</td></tr>
+            <tr><td>Holgado — 140 equipos</td><td class="num">$243.814.501</td><td class="num">$46.324.755</td><td class="num">$290.139.256</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="foot" style="margin-top:10px;">Incluye el lote fijo Core 2Brains (10 MBA M5: $11.654.830 neto / $13.869.248 total) sumado en los tres escenarios. Ver detalle completo en <a href="#actualizacion">Actualización Core 2Brains</a>.</div>
+    </div>
+
+    <h3 class="sub-title">Recorrido del análisis</h3>
+    <div class="timeline">
+      <div class="tl-card">
+        <div class="tl-num">1</div>
+        <h4>Diagnóstico inicial</h4>
+        <p>Se analizó Catastro completo: inventario, compras, equipos pendientes, presión histórica, proveedores y condiciones de pago.</p>
+        <div class="result">Resultado: <b>130 equipos</b> · Total $281.373.315 con IVA</div>
+      </div>
+      <div class="tl-card">
+        <div class="tl-num">2</div>
+        <h4>Revisión metodológica</h4>
+        <p>Se eliminó el sesgo de julio (mes no cerrado), se condicionaron los reemplazos a evidencia y se corrigió el mix de equipos.</p>
+        <div class="result">Resultado: rango <b>85–130</b>, recomendado <b>100</b></div>
+      </div>
+      <div class="tl-card">
+        <div class="tl-num">3</div>
+        <h4>Conveniencia económica</h4>
+        <p>Se comparó el costo, capital inmovilizado, descuentos de equilibrio y esquemas de pago de comprar 100, 115 o 130 equipos.</p>
+        <div class="result">Resultado: <b>100 ahora</b> + opción negociada por <b>15 más</b></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== ITERACIÓN 1 ===================== -->
+  <section id="iteracion1">
+    <h2 class="sec-title"><span class="num">1</span>Objetivo y primera revisión</h2>
+    <p class="sec-desc"><b style="color:#fff">Pregunta de jefatura:</b> ¿cuántos computadores comprar en una sola orden para cubrir las necesidades de Acid Labs hasta diciembre de 2026, evitando compras pequeñas cada uno o dos meses?</p>
+
+    <div class="card-row" style="margin-bottom:26px;">
+      <div class="info-card">
+        <h5>Variables analizadas en Catastro</h5>
+        <ul>
+          <li>Inventario disponible y stock libre</li>
+          <li>Compras realizadas y equipos pendientes de recepción</li>
+          <li>Presión histórica de compra y tendencia operacional</li>
+          <li>Proveedores y condiciones de pago</li>
+        </ul>
+      </div>
+      <div class="info-card">
+        <h5>Resultado inicial (sobreestimado)</h5>
+        <ul>
+          <li><b style="color:#fff">130</b> computadores en total</li>
+          <li>75 MacBook Pro · 47 Windows · 8 MacBook Air</li>
+          <li>Presupuesto: Neto $236.448.164 + IVA $44.925.151</li>
+          <li><b style="color:#fff">Total: $281.373.315</b></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="chart-grid-2">
+      <div class="chart-box">
+        <h5>Mix propuesto inicialmente (130 equipos)</h5>
+        <p class="chart-desc">Basado en activos sin propietario — luego identificado como sesgo metodológico.</p>
+        <canvas id="chartMixInicial" height="180"></canvas>
+      </div>
+      <div class="callout warn">
+        <b>⚠ Hallazgo:</b> esta cifra estaba influenciada por supuestos demasiado optimistas: incluía el sesgo del mes de julio (aún no cerrado), asumía reemplazos automáticos sin evidencia, y calculaba el mix con activos sin propietario claro.
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== ITERACIÓN 2 ===================== -->
+  <section id="iteracion2">
+    <h2 class="sec-title"><span class="num">2</span>Segunda revisión metodológica</h2>
+    <p class="sec-desc">Se corrigieron tres problemas del modelo original antes de recalcular la demanda.</p>
+
+    <div class="card-row" style="margin-bottom:30px;">
+      <div class="info-card">
+        <h5>① Sesgo de julio eliminado</h5>
+        <p style="color:var(--muted);font-size:13.5px;margin:0;">Julio no estaba cerrado, así que no debía pesar igual que los meses completos. La demanda proyectada bajó de 125 a ~97–100 equipos.</p>
+      </div>
+      <div class="info-card">
+        <h5>② Reemplazos condicionados</h5>
+        <p style="color:var(--muted);font-size:13.5px;margin:0;">Los diez reemplazos asumidos no tenían suficiente evidencia operacional. Quedaron condicionados a validar activos concretos.</p>
+      </div>
+      <div class="info-card">
+        <h5>③ Mix de equipos corregido</h5>
+        <p style="color:var(--muted);font-size:13.5px;margin:0;">Se recalculó usando activos Acid Labs, compras Acid 2026 y asignaciones Acid — no activos sin propietario.</p>
+      </div>
+    </div>
+
+    <div class="chart-grid-2">
+      <div class="chart-box">
+        <h5>Nueva recomendación por escenario</h5>
+        <p class="chart-desc">130 equipos deja de ser "la compra recomendada" y pasa a ser el escenario de máxima cobertura.</p>
+        <canvas id="chartEscenarios" height="200"></canvas>
+      </div>
+      <div class="chart-box">
+        <h5>Mix recomendado corregido</h5>
+        <p class="chart-desc">Calculado con activos y asignaciones Acid Labs reales.</p>
+        <canvas id="chartMixCorregido" height="200"></canvas>
+      </div>
+    </div>
+
+    <h4 class="mini-title">Tabla de escenarios</h4>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Escenario</th><th class="num">Cantidad</th><th>Interpretación</th></tr></thead>
+        <tbody>
+          <tr><td>Mínimo operacional</td><td class="num">85</td><td><span class="badge muted">Piso</span></td></tr>
+          <tr class="highlight"><td>Compra recomendada</td><td class="num">100</td><td><span class="badge green">Base económica</span></td></tr>
+          <tr><td>Techo presupuestario</td><td class="num">115</td><td><span class="badge blue">Negociar</span></td></tr>
+          <tr><td>Escenario holgado</td><td class="num">130</td><td><span class="badge amber">Contingencia</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ===================== ITERACIÓN 3 ===================== -->
+  <section id="iteracion3">
+    <h2 class="sec-title"><span class="num">3</span>Tercera revisión: conveniencia económica y financiera</h2>
+    <p class="sec-desc"><b style="color:#fff">Pregunta de negocio:</b> ¿conviene comprar más equipos ahora para obtener mejores condiciones comerciales? Análisis validado — no se modificaron datos, modelos, dashboard, archivos ni Git.</p>
+
+    <div class="callout" style="margin-bottom:30px;">
+      Comprar <b>100</b> equipos sigue siendo la alternativa económica base ($212,9M, deja 4 unidades de respaldo). Comprar <b>115</b> ofrece mejor equilibrio operacional, pero conviene sólo con descuento ≥3,23%, pago a 60–90 días, stock reservado o evidencia de Staffing. Comprar <b>130</b> inmoviliza ~$60,8M netos y no se justifica sin demanda confirmada.
+    </div>
+
+    <h3 class="sub-title">3.1 Comparación general</h3>
+    <div class="chart-grid-2" style="margin-bottom:20px;">
+      <div class="chart-box">
+        <h5>Costo total con IVA por alternativa</h5>
+        <p class="chart-desc">Comparación neto / IVA apilado para 100, 115 y 130 equipos.</p>
+        <canvas id="chartCostoTotal" height="230"></canvas>
+      </div>
+      <div class="chart-box">
+        <h5>Stock final y cobertura remanente</h5>
+        <p class="chart-desc">Unidades sin consumir al cierre y meses de cobertura equivalente (demanda media ~19,8/mes).</p>
+        <canvas id="chartStock" height="230"></canvas>
+      </div>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Alternativa</th><th class="num">Neto</th><th class="num">IVA</th><th class="num">Total</th><th class="num">Stock final</th><th class="num">Cobertura remanente</th></tr></thead>
+        <tbody>
+          <tr class="highlight"><td>100</td><td class="num">$178.919.690</td><td class="num">$33.994.741</td><td class="num">$212.914.431</td><td class="num">4</td><td class="num">0,2 meses</td></tr>
+          <tr><td>115</td><td class="num">$205.459.572</td><td class="num">$39.037.319</td><td class="num">$244.496.891</td><td class="num">19</td><td class="num">1,0 mes</td></tr>
+          <tr><td>130</td><td class="num">$232.159.671</td><td class="num">$44.110.337</td><td class="num">$276.270.008</td><td class="num">34</td><td class="num">1,7 meses</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="small-note">La cobertura remanente usa una demanda media aproximada de 19,8 equipos mensuales; no es una proyección contable de inventario.</p>
+
+    <h3 class="sub-title">3.2 Diferencias de inversión frente a 100</h3>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Indicador</th><th class="num">100</th><th class="num">115</th><th class="num">130</th></tr></thead>
+        <tbody>
+          <tr><td>Equipos adicionales</td><td class="num">—</td><td class="num">15</td><td class="num">30</td></tr>
+          <tr><td>Diferencia neta</td><td class="num">—</td><td class="num">$26.539.882</td><td class="num">$53.239.981</td></tr>
+          <tr><td>Diferencia de IVA</td><td class="num">—</td><td class="num">$5.042.578</td><td class="num">$10.115.596</td></tr>
+          <tr class="highlight"><td>Diferencia total</td><td class="num">—</td><td class="num">$31.582.460</td><td class="num">$63.355.577</td></tr>
+          <tr><td>Incremento presupuestario</td><td class="num">—</td><td class="num">14,83%</td><td class="num">29,76%</td></tr>
+          <tr><td>Neto promedio por equipo</td><td class="num">$1.789.197</td><td class="num">$1.786.605</td><td class="num">$1.785.844</td></tr>
+          <tr><td>Total promedio por equipo</td><td class="num">$2.129.144</td><td class="num">$2.126.060</td><td class="num">$2.125.154</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="small-note">La pequeña baja del costo medio en 115 y 130 proviene del redondeo del mix, no de un descuento comercial documentado.</p>
+
+    <h3 class="sub-title">3.3 Punto de equilibrio por descuento</h3>
+    <div class="grid-2" style="margin-bottom:18px;">
+      <div class="info-card">
+        <h5>Igualar completamente el costo de 100</h5>
+        <div class="table-wrap" style="border:none;background:transparent;">
+          <table style="min-width:0;">
+            <tbody>
+              <tr><td>115 por el costo de 100</td><td class="num"><span class="badge red">12,92%</span></td></tr>
+              <tr><td>130 por el costo de 100</td><td class="num"><span class="badge red">22,93%</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p style="color:var(--muted);font-size:12.5px;margin:6px 0 0;">Umbrales teóricos poco realistas.</p>
+      </div>
+      <div class="info-card">
+        <h5>Reducir el costo incremental</h5>
+        <div class="table-wrap" style="border:none;background:transparent;">
+          <table style="min-width:0;">
+            <thead><tr><th>Objetivo</th><th class="num">115</th><th class="num">130</th></tr></thead>
+            <tbody>
+              <tr><td>Reducir 25%</td><td class="num"><span class="badge green">3,23%</span></td><td class="num">5,73%</td></tr>
+              <tr><td>Reducir 50%</td><td class="num">6,46%</td><td class="num">11,47%</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p style="color:var(--muted);font-size:12.5px;margin:6px 0 0;">3,23% es la meta comercial razonable para anticipar 115.</p>
+      </div>
+    </div>
+    <h4 class="mini-title">Reducir el costo unitario frente a 100</h4>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Reducción objetivo del unitario</th><th class="num">Descuento en 115</th><th class="num">Descuento en 130</th></tr></thead>
+        <tbody>
+          <tr><td>3%</td><td class="num">2,86%</td><td class="num">2,82%</td></tr>
+          <tr><td>5%</td><td class="num">4,86%</td><td class="num">4,82%</td></tr>
+          <tr><td>7%</td><td class="num">6,87%</td><td class="num">6,83%</td></tr>
+          <tr><td>10%</td><td class="num">9,87%</td><td class="num">9,83%</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 class="sub-title">3.4 Simulación de descuentos</h3>
+    <p class="chart-desc" style="margin-bottom:14px;">El descuento se aplica al neto y se recalcula IVA de 19%.</p>
+    <div class="chart-box" style="margin-bottom:18px;">
+      <h5>Total con IVA según % de descuento</h5>
+      <canvas id="chartDescuentos" height="220"></canvas>
+    </div>
+    <div class="tabs">
+      <button class="tab-btn active" data-tab="d100">Compra de 100</button>
+      <button class="tab-btn" data-tab="d115">Compra de 115</button>
+      <button class="tab-btn" data-tab="d130">Compra de 130</button>
+    </div>
+    <div class="tab-panel active" id="d100">
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Descuento</th><th class="num">Neto</th><th class="num">IVA</th><th class="num">Total</th><th class="num">Ahorro total</th><th class="num">Neto unitario</th></tr></thead>
+          <tbody>
+            <tr><td>0%</td><td class="num">$178.919.690</td><td class="num">$33.994.741</td><td class="num">$212.914.431</td><td class="num">$0</td><td class="num">$1.789.197</td></tr>
+            <tr><td>3%</td><td class="num">$173.552.099</td><td class="num">$32.974.899</td><td class="num">$206.526.998</td><td class="num">$6.387.433</td><td class="num">$1.735.521</td></tr>
+            <tr><td>5%</td><td class="num">$169.973.706</td><td class="num">$32.295.004</td><td class="num">$202.268.710</td><td class="num">$10.645.721</td><td class="num">$1.699.737</td></tr>
+            <tr><td>7%</td><td class="num">$166.395.312</td><td class="num">$31.615.109</td><td class="num">$198.010.421</td><td class="num">$14.904.010</td><td class="num">$1.663.953</td></tr>
+            <tr><td>10%</td><td class="num">$161.027.721</td><td class="num">$30.595.267</td><td class="num">$191.622.988</td><td class="num">$21.291.443</td><td class="num">$1.610.277</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="tab-panel" id="d115">
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Descuento</th><th class="num">Neto</th><th class="num">IVA</th><th class="num">Total</th><th class="num">Ahorro total</th><th class="num">Neto unitario</th></tr></thead>
+          <tbody>
+            <tr><td>0%</td><td class="num">$205.459.572</td><td class="num">$39.037.319</td><td class="num">$244.496.891</td><td class="num">$0</td><td class="num">$1.786.605</td></tr>
+            <tr><td>3%</td><td class="num">$199.295.785</td><td class="num">$37.866.199</td><td class="num">$237.161.984</td><td class="num">$7.334.907</td><td class="num">$1.733.007</td></tr>
+            <tr><td>5%</td><td class="num">$195.186.593</td><td class="num">$37.085.453</td><td class="num">$232.272.046</td><td class="num">$12.224.845</td><td class="num">$1.697.275</td></tr>
+            <tr><td>7%</td><td class="num">$191.077.402</td><td class="num">$36.304.706</td><td class="num">$227.382.108</td><td class="num">$17.114.783</td><td class="num">$1.661.543</td></tr>
+            <tr><td>10%</td><td class="num">$184.913.615</td><td class="num">$35.133.587</td><td class="num">$220.047.202</td><td class="num">$24.449.689</td><td class="num">$1.607.944</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="tab-panel" id="d130">
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Descuento</th><th class="num">Neto</th><th class="num">IVA</th><th class="num">Total</th><th class="num">Ahorro total</th><th class="num">Neto unitario</th></tr></thead>
+          <tbody>
+            <tr><td>0%</td><td class="num">$232.159.671</td><td class="num">$44.110.337</td><td class="num">$276.270.008</td><td class="num">$0</td><td class="num">$1.785.844</td></tr>
+            <tr><td>3%</td><td class="num">$225.194.881</td><td class="num">$42.787.027</td><td class="num">$267.981.908</td><td class="num">$8.288.100</td><td class="num">$1.732.268</td></tr>
+            <tr><td>5%</td><td class="num">$220.551.687</td><td class="num">$41.904.821</td><td class="num">$262.456.508</td><td class="num">$13.813.500</td><td class="num">$1.696.551</td></tr>
+            <tr><td>7%</td><td class="num">$215.908.494</td><td class="num">$41.022.614</td><td class="num">$256.931.108</td><td class="num">$19.338.900</td><td class="num">$1.660.835</td></tr>
+            <tr><td>10%</td><td class="num">$208.943.704</td><td class="num">$39.699.304</td><td class="num">$248.643.008</td><td class="num">$27.627.000</td><td class="num">$1.607.259</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <p class="small-note">Incluso con 10% de descuento, 115 sigue costando $7,1M más que 100 sin descuento. En 130, cuesta $35,7M más.</p>
+
+    <h3 class="sub-title">3.5 Capital inmovilizado en inventario final</h3>
+    <p class="chart-desc">Costo neto ponderado del mix 55/35/10: $1.789.197 por equipo.</p>
+    <div class="chart-grid-2" style="margin-bottom:20px;">
+      <div class="chart-box">
+        <h5>Capital neto inmovilizado por escenario</h5>
+        <canvas id="chartCapital" height="230"></canvas>
+      </div>
+      <div>
+        <div class="table-wrap" style="margin-bottom:16px;">
+          <table>
+            <thead><tr><th>Alternativa</th><th class="num">Stock final</th><th class="num">Valor neto remanente</th><th class="num">Inmovilización adicional</th></tr></thead>
+            <tbody>
+              <tr class="highlight"><td>100</td><td class="num">4</td><td class="num">$7.156.788</td><td class="num">—</td></tr>
+              <tr><td>115</td><td class="num">19</td><td class="num">$33.994.741</td><td class="num">$26.837.953</td></tr>
+              <tr><td>130</td><td class="num">34</td><td class="num">$60.832.695</td><td class="num">$53.675.907</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <h4 class="mini-title" style="margin-top:0;">Riesgos asociados</h4>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Alternativa</th><th>Obsolescencia</th><th>Cambio modelo/precio</th><th>Mix distinto de Staffing</th></tr></thead>
+            <tbody>
+              <tr><td>100</td><td><span class="badge green">Bajo</span></td><td><span class="badge green">Bajo</span></td><td><span class="badge green">Bajo</span></td></tr>
+              <tr><td>115</td><td><span class="badge amber">Bajo-medio</span></td><td><span class="badge amber">Medio</span></td><td><span class="badge amber">Medio</span></td></tr>
+              <tr><td>130</td><td><span class="badge red">Medio-alto</span></td><td><span class="badge red">Alto</span></td><td><span class="badge red">Alto</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <p class="small-note">No existe en Catastro una tasa contable de almacenamiento o costo de capital que permita convertir esta inmovilización en gasto financiero. En 130, 34 equipos podrían quedar sin asignar — riesgo especialmente relevante para MacBook Pro.</p>
+
+    <h3 class="sub-title">3.6 Calendarios de pago</h3>
+    <p class="chart-desc">Orden emitida a fines de julio de 2026 · 30 días = agosto, 60 días = septiembre, 90 días = octubre · sin descuento, montos con IVA.</p>
+    <div class="chart-box" style="margin-bottom:20px;">
+      <h5>Máximo desembolso mensual por esquema de pago</h5>
+      <p class="chart-desc">La distribución en tres cuotas es la que más reduce la concentración de caja sin cambiar el costo total.</p>
+      <canvas id="chartPagos" height="230"></canvas>
+    </div>
+    <div class="grid-2">
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Pago único</th><th class="num">100</th><th class="num">115</th><th class="num">130</th></tr></thead>
+          <tbody>
+            <tr><td>Monto (30/60/90 días)</td><td class="num">$212.914.431</td><td class="num">$244.496.891</td><td class="num">$276.270.008</td></tr>
+            <tr><td>Pago inicial</td><td class="num">$0</td><td class="num">$0</td><td class="num">$0</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>3 cuotas iguales</th><th class="num">100</th><th class="num">115</th><th class="num">130</th></tr></thead>
+          <tbody>
+            <tr><td>Cuota mensual (ago-sep-oct)</td><td class="num">$70.971.477</td><td class="num">$81.498.964</td><td class="num">$92.090.003</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <p class="small-note">No puede concluirse cuál calendario tiene menor costo financiero real: faltan tasa de costo de capital de Acid Labs, disponibilidad de líneas de crédito, rendimiento alternativo de caja, recargos del proveedor por plazo y tratamiento financiero del crédito fiscal IVA.</p>
+
+    <h3 class="sub-title">3.7 y 3.8 Comprar 100 ahora y el resto después</h3>
+    <div class="grid-2" style="margin-bottom:18px;">
+      <div class="info-card">
+        <h5>Bloque de 15 unidades (100→115)</h5>
+        <p style="color:var(--muted);font-size:13.5px;">Costo hoy: Neto $26.539.882 + IVA $5.042.578 = <b style="color:#fff">$31.582.460</b></p>
+        <div class="table-wrap" style="border:none;background:transparent;">
+          <table style="min-width:0;">
+            <thead><tr><th>Alza futura</th><th class="num">Diferencia vs. 115 ahora</th></tr></thead>
+            <tbody>
+              <tr><td>0%</td><td class="num">$0</td></tr>
+              <tr><td>3%</td><td class="num">+$947.473</td></tr>
+              <tr><td>5%</td><td class="num">+$1.579.123</td></tr>
+              <tr><td>10%</td><td class="num">+$3.158.245</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="info-card">
+        <h5>Bloque de 30 unidades (100→130)</h5>
+        <p style="color:var(--muted);font-size:13.5px;">Costo hoy: <b style="color:#fff">$63.355.577</b> con IVA</p>
+        <div class="table-wrap" style="border:none;background:transparent;">
+          <table style="min-width:0;">
+            <thead><tr><th>Alza futura</th><th class="num">Diferencia vs. 130 ahora</th></tr></thead>
+            <tbody>
+              <tr><td>0%</td><td class="num">$0</td></tr>
+              <tr><td>3%</td><td class="num">+$1.900.667</td></tr>
+              <tr><td>5%</td><td class="num">+$3.167.779</td></tr>
+              <tr><td>10%</td><td class="num">+$6.335.558</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div class="callout good" style="margin-bottom:18px;">
+      Incluso con 10% de alza futura, esperar sólo encarece el programa de 130 en $6,3M — mientras comprar 130 ahora inmoviliza ~$53,7M netos adicionales frente a 100. <b>Anticipar 30 unidades no se justifica solo como cobertura frente a inflación de precios.</b>
+    </div>
+
+    <h4 class="mini-title">Comparación cualitativa: 100 + 15 después vs. 115 ahora</h4>
+    <div class="table-wrap" style="margin-bottom:26px;">
+      <table>
+        <thead><tr><th>Factor</th><th>100 ahora + 15 después</th><th>115 ahora</th></tr></thead>
+        <tbody>
+          <tr><td>Precio actual</td><td>Conocido sólo para las primeras 100</td><td>Conocido para todo el volumen</td></tr>
+          <tr><td>Variación futura</td><td>Expuesto a 0–10% o más</td><td>Eliminada si el precio queda fijo</td></tr>
+          <tr><td>Administración</td><td>Dos procesos/órdenes</td><td>Un proceso</td></tr>
+          <tr><td>Despacho</td><td>Posible segundo cargo</td><td>Un despacho consolidado</td></tr>
+          <tr><td>Falta de stock proveedor</td><td>Riesgo futuro</td><td>Stock comprometido ahora</td></tr>
+          <tr><td>Liquidez</td><td><span class="badge green">Mejor</span> — pago aplazado</td><td><span class="badge red">Peor</span> — capital anticipado</td></tr>
+          <tr><td>Sobrestock</td><td><span class="badge green">Menor</span></td><td><span class="badge amber">Moderado</span></td></tr>
+          <tr><td>Flexibilidad de mix</td><td><span class="badge green">Mayor</span></td><td><span class="badge amber">Menor</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 class="sub-title">3.9 Proveedores para negociación</h3>
+    <div class="table-wrap" style="margin-bottom:26px;">
+      <table>
+        <thead><tr><th>Proveedor</th><th>Evidencia reciente</th><th>Pago observado</th><th>Entrega / capacidad</th><th>Riesgos</th></tr></thead>
+        <tbody>
+          <tr><td>Innovación y Tecnología Empresarial</td><td>MBP A3426 $2.197.552; MBA A3449 $1.165.483 netos</td><td>~60 días</td><td>22 de 25 individualizados; 3 MBP pendientes</td><td>Recepción incompleta; sin descuento por volumen documentado</td></tr>
+          <tr><td>ITPARTNERSOLUTIONS</td><td>HP EliteBook 8 G1i $1.325.700 netos</td><td>OC 30 días</td><td>10 equipos, ~6 días tras la OC</td><td>Capacidad para volumen mayor no acreditada</td></tr>
+          <tr><td>ITPARTNER</td><td>HP $1.439.700</td><td>Factura a 30 días</td><td>10 unidades registradas</td><td>Precio superior a julio</td></tr>
+          <tr><td>MacOnline</td><td>MBP M4 Pro $1.903.031</td><td>~90 días</td><td>Compra histórica de 20</td><td>Modelo anterior; precio no comparable directo</td></tr>
+          <tr><td>Ricoh</td><td>HP y MBP históricos más baratos</td><td>~60 días</td><td>Conciliación documental incompleta</td><td>Precios de enero, modelos distintos</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="small-note">No existe evidencia de que algún proveedor acepte descuentos, opciones o nuevos plazos. Todo debe confirmarse mediante cotización y negociación formal.</p>
+
+    <h3 class="sub-title">3.10 Evaluación financiera-operacional</h3>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Alternativa</th><th class="num">Total sin descuento</th><th class="num">Stock final</th><th>Riesgo de quiebre</th><th>Riesgo de exceso</th><th class="num">Capital inmovilizado</th><th>Evaluación</th></tr></thead>
+        <tbody>
+          <tr class="highlight"><td>100</td><td class="num">$212.914.431</td><td class="num">4</td><td><span class="badge amber">Medio</span></td><td><span class="badge green">Bajo</span></td><td class="num">$7.156.788</td><td>Base económica</td></tr>
+          <tr><td>115</td><td class="num">$244.496.891</td><td class="num">19</td><td><span class="badge green">Bajo</span></td><td><span class="badge amber">Medio</span></td><td class="num">$33.994.741</td><td>Mejor cobertura si hay ventaja comercial</td></tr>
+          <tr><td>130</td><td class="num">$276.270.008</td><td class="num">34</td><td><span class="badge green">Muy bajo</span></td><td><span class="badge red">Alto</span></td><td class="num">$60.832.695</td><td>Holgado; no recomendado sin demanda</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ===================== ESTRATEGIA ===================== -->
+  <section id="estrategia">
+    <h2 class="sec-title"><span class="num">✓</span>Estrategia comercial recomendada</h2>
+    <p class="sec-desc">Más que decidir únicamente entre comprar 100 o 115 equipos, se propone negociar un contrato flexible que capture lo mejor de ambos escenarios.</p>
+
+    <div class="strategy-box">
+      <h3>Negociar un contrato por hasta 115 equipos</h3>
+      <p style="margin:0 0 6px;">Entrega inicial firme de <b>100 computadores</b>, con opción de activar <b>15 adicionales</b> antes de una fecha acordada, manteniendo mismo precio, configuración y condiciones comerciales.</p>
+      <div class="strategy-grid">
+        <div><b>Pago</b>Únicamente contra entrega de cada tramo</div>
+        <div><b>Vigencia de la opción</b>Hasta el cierre de septiembre u octubre</div>
+        <div><b>Precio</b>Fijo para las 15 unidades opcionales</div>
+        <div><b>Mix</b>Ajustable en las unidades opcionales</div>
+        <div><b>Suministro</b>Stock o capacidad reservada</div>
+        <div><b>Entregas</b>Serializadas, propietario Acid explícito</div>
+        <div><b>Penalidad</b>Ninguna si Staffing no requiere el tramo opcional</div>
+      </div>
+      <p style="margin-top:16px;color:var(--muted);font-size:13px;">Esta estructura reduce simultáneamente: sobrestock (sólo ingresan 100 inicialmente), alza de precio (valor fijado para las 15), quiebre de stock (ampliación preacordada), concentración de caja (segundo tramo se paga al activarse) y riesgo de mix equivocado (plataforma ajustable). <b style="color:#fff">Su viabilidad debe validarse con proveedores y Compras.</b></p>
+    </div>
+
+    <h4 class="mini-title" style="margin-top:30px;">Comparación final de alternativas</h4>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Alternativa</th><th>Evaluación</th></tr></thead>
+        <tbody>
+          <tr class="highlight"><td>100 equipos</td><td>Mejor equilibrio financiero. Menor inversión inicial y menor riesgo de sobrestock.</td></tr>
+          <tr><td>115 equipos</td><td>Preferible si se obtiene un descuento cercano al 3% o mejores condiciones comerciales.</td></tr>
+          <tr><td>130 equipos</td><td>Sólo recomendable con crecimiento confirmado, contratación adicional o ventaja comercial excepcional.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ===================== RECOMENDACIÓN FINAL ===================== -->
+  <section id="recomendacion">
+    <h2 class="sec-title"><span class="num">🏁</span>Recomendación final</h2>
+    <p class="sec-desc">Con la información disponible al 30 de julio de 2026, la necesidad operacional estimada para Acid Labs se sitúa entre <b style="color:#fff">85 y 115</b> computadores.</p>
+
+    <div class="card-row" style="margin-bottom:30px;">
+      <div class="info-card" style="border-color:rgba(61,220,151,.4);">
+        <h5 style="color:var(--green);">① Compra base</h5>
+        <p style="color:var(--muted);font-size:13.5px;margin:0;">Utilizar <b style="color:#fff">100 equipos</b> como compra base.</p>
+      </div>
+      <div class="info-card" style="border-color:rgba(91,157,255,.4);">
+        <h5 style="color:var(--accent);">② Negociar ampliación</h5>
+        <p style="color:var(--muted);font-size:13.5px;margin:0;">Contrato por hasta <b style="color:#fff">115 equipos</b> con entregas parciales u opción de ampliación.</p>
+      </div>
+      <div class="info-card" style="border-color:rgba(255,184,77,.4);">
+        <h5 style="color:var(--amber);">③ Contingencia</h5>
+        <p style="color:var(--muted);font-size:13.5px;margin:0;"><b style="color:#fff">130 equipos</b> sólo ante crecimiento confirmado o ventaja comercial excepcional.</p>
+      </div>
+    </div>
+
+    <h4 class="mini-title">Texto para jefatura</h4>
+    <div class="quote-box">
+      <p>Comprar 100 equipos sigue siendo la alternativa económica base, por $212,9 millones con IVA.</p>
+      <p>Comprar 115 exige $31,6 millones adicionales y deja 19 equipos al cierre.</p>
+      <p>Recomendamos negociar un contrato por hasta 115, con entrega inicial de 100 y opción por 15.</p>
+      <p>La ampliación inmediata resulta atractiva con un descuento mínimo cercano a 3,23%.</p>
+      <p>Alternativamente, debe fijarse el precio y pagar las 15 unidades sólo cuando se active su entrega.</p>
+      <p>El pago en tres cuotas reduciría el máximo desembolso mensual de 115 a $81,5 millones.</p>
+      <p>Comprar 130 exige $63,4 millones adicionales y dejaría 34 equipos sin consumir.</p>
+      <p>Esa alternativa sólo se justifica con demanda confirmada o una ventaja comercial excepcional.</p>
+      <p>No hay descuentos ni nuevos plazos documentados; deben obtenerse mediante cotización formal.</p>
+      <p><b>La estrategia recomendada equilibra liquidez, cobertura y riesgo de sobrestock.</b></p>
+    </div>
+  </section>
+
+  <!-- ===================== ACTUALIZACIÓN CORE 2BRAINS ===================== -->
+  <section id="actualizacion">
+    <h2 class="sec-title"><span class="num" style="background:linear-gradient(135deg,#3ddc97,#5b9dff);">🔄</span>Proyección actualizada — Renovación Core 2Brains</h2>
+    <p class="sec-desc">La proyección operacional de Acid Labs <b style="color:#fff">no cambia</b>. Los 10 MacBook Air M5 de Core 2Brains se incorporan como una necesidad confirmada e independiente, sin consumir contingencia ni alterar la demanda, stock o mix de Acid Labs.</p>
+
+    <div class="kpi-grid">
+      <div class="kpi-card recommended">
+        <span class="tag green">Consolidado base</span>
+        <div class="label">100 Acid + 10 Core</div>
+        <div class="value">110 <small>equipos</small></div>
+        <div class="foot">Total con IVA: $226.783.679 · Menor desembolso y sobrestock</div>
+      </div>
+      <div class="kpi-card">
+        <span class="tag blue">Consolidado recomendado</span>
+        <div class="label">115 Acid + 10 Core</div>
+        <div class="value">125 <small>equipos</small></div>
+        <div class="foot">Total con IVA: $258.366.139 · Techo prudente, mejor volumen negociador</div>
+      </div>
+      <div class="kpi-card">
+        <span class="tag amber">Consolidado holgado</span>
+        <div class="label">130 Acid + 10 Core</div>
+        <div class="value">140 <small>equipos</small></div>
+        <div class="foot">Total con IVA: $290.139.256 · Sólo con demanda Acid adicional confirmada</div>
+      </div>
+    </div>
+
+    <h3 class="sub-title">Distribución por escenario</h3>
+    <p class="chart-desc">Los 12 equipos Core se asignan íntegramente a MacBook Air M5; no se distribuyen proporcionalmente.</p>
+    <div class="table-wrap" style="margin-bottom:26px;">
+      <table>
+        <thead><tr><th>Escenario</th><th class="num">MBP Acid</th><th class="num">Windows Acid</th><th class="num">MBA Acid</th><th class="num">MBA Core 2Brains</th><th class="num">MBA total</th><th class="num">Total general</th></tr></thead>
+        <tbody>
+          <tr class="highlight"><td>Base</td><td class="num">55</td><td class="num">35</td><td class="num">10</td><td class="num">10</td><td class="num">20</td><td class="num">110</td></tr>
+          <tr><td>Recomendado</td><td class="num">63</td><td class="num">40</td><td class="num">12</td><td class="num">10</td><td class="num">22</td><td class="num">125</td></tr>
+          <tr><td>Holgado</td><td class="num">71</td><td class="num">46</td><td class="num">13</td><td class="num">10</td><td class="num">23</td><td class="num">140</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="grid-2" style="margin-bottom:26px;">
+      <div class="info-card">
+        <h5>Precios netos históricos más recientes</h5>
+        <div class="table-wrap" style="border:none;background:transparent;">
+          <table style="min-width:0;">
+            <tbody>
+              <tr><td>MacBook Pro M5 Pro</td><td class="num">$2.197.552</td></tr>
+              <tr><td>Windows HP EliteBook</td><td class="num">$1.325.700</td></tr>
+              <tr><td>MacBook Air M5</td><td class="num">$1.165.483</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="info-card">
+        <h5>Lote Core 2Brains (10 unidades) — igual en todos los escenarios</h5>
+        <div class="table-wrap" style="border:none;background:transparent;">
+          <table style="min-width:0;">
+            <tbody>
+              <tr><td>Neto</td><td class="num">$11.654.830</td></tr>
+              <tr><td>IVA</td><td class="num">$2.214.418</td></tr>
+              <tr class="highlight"><td>Total</td><td class="num">$13.869.248</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <h3 class="sub-title">Presupuesto consolidado</h3>
+    <div class="chart-grid-2" style="margin-bottom:20px;">
+      <div class="chart-box">
+        <h5>Total con IVA: Acid Labs vs. Core 2Brains</h5>
+        <p class="chart-desc">El lote Core (12 equipos, $16,6M) se suma igual en los tres escenarios; sólo cambia el volumen de Acid Labs.</p>
+        <canvas id="chartConsolidado" height="220"></canvas>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Escenario</th><th class="num">Acid Labs</th><th class="num">Core 2Brains</th><th class="num">Neto consolidado</th><th class="num">IVA</th><th class="num">Total</th></tr></thead>
+          <tbody>
+            <tr class="highlight"><td>Base — 110</td><td class="num">100</td><td class="num">10</td><td class="num">$190.574.520</td><td class="num">$36.209.159</td><td class="num">$226.783.679</td></tr>
+            <tr><td>Recomendado — 125</td><td class="num">115</td><td class="num">10</td><td class="num">$217.114.402</td><td class="num">$41.251.737</td><td class="num">$258.366.139</td></tr>
+            <tr><td>Holgado — 140</td><td class="num">130</td><td class="num">10</td><td class="num">$243.814.501</td><td class="num">$46.324.755</td><td class="num">$290.139.256</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <p class="small-note">El IVA se recalculó al 19% sobre el neto consolidado. No se asumieron descuentos por volumen.</p>
+
+    <h3 class="sub-title">Separación por propietario</h3>
+    <div class="chart-grid-2">
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Propietario</th><th>Naturaleza de la demanda</th><th>Cantidad</th></tr></thead>
+          <tbody>
+            <tr><td>Acid Labs</td><td>Proyección operacional agosto–diciembre</td><td>100, 115 o 130</td></tr>
+            <tr><td>2Brains</td><td>Renovación Core confirmada</td><td>10 MBA M5</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="callout">
+        <b>La separación debe mantenerse en:</b>
+        <ul style="margin:10px 0 0;padding-left:18px;color:var(--text);">
+          <li>Orden de compra o líneas separadas.</li>
+          <li>Factura y centro de costo.</li>
+          <li>Recepción y serialización.</li>
+          <li>Registro de propietario del activo.</li>
+          <li>Asignación presupuestaria.</li>
+          <li>Garantías y trazabilidad posterior.</li>
+        </ul>
+        <p style="margin:10px 0 0;">Aunque se negocie comercialmente como un volumen consolidado, los activos no deben mezclarse contable ni operacionalmente.</p>
+      </div>
+    </div>
+
+    <h3 class="sub-title">Lectura comercial actualizada</h3>
+    <div class="table-wrap" style="margin-bottom:10px;">
+      <table>
+        <thead><tr><th>Escenario</th><th class="num">Total</th><th>Uso recomendado</th><th>Evaluación</th></tr></thead>
+        <tbody>
+          <tr class="highlight"><td>110</td><td class="num">$226.783.679</td><td>100 Acid firmes + 10 Core confirmados</td><td>Menor desembolso y sobrestock</td></tr>
+          <tr><td>125</td><td class="num">$258.366.139</td><td>115 Acid + 10 Core</td><td>Techo prudente y mejor volumen negociador</td></tr>
+          <tr><td>140</td><td class="num">$290.139.256</td><td>130 Acid + 10 Core</td><td>Sólo con demanda Acid adicional confirmada</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="strategy-box" style="margin-top:26px;">
+      <h3>Contrato marco por hasta 125 equipos</h3>
+      <p style="margin:0 0 6px;">Entrega firme inicial de <b>110 equipos</b> —100 Acid + 10 MBA Core 2Brains— con opción de activar <b>15 equipos adicionales</b> para Acid Labs.</p>
+      <div class="strategy-grid">
+        <div><b>Precio</b>Mantener precio para las 15 unidades opcionales</div>
+        <div><b>Pago</b>Cada tramo contra su entrega</div>
+        <div><b>Mix</b>Ajustable en las 15 unidades Acid</div>
+        <div><b>Entregas</b>Parciales y calendarizadas</div>
+        <div><b>Separación</b>Documental de Acid Labs y 2Brains</div>
+        <div><b>Serialización</b>Con propietario explícito</div>
+        <div><b>Plazo de pago</b>60–90 días, si el proveedor lo acepta sin recargo</div>
+        <div><b>Descuento</b>Solicitar sobre el volumen consolidado, sin incorporarlo anticipadamente al presupuesto</div>
+      </div>
+      <p style="margin-top:16px;color:var(--muted);font-size:13px;">El escenario de <b style="color:#fff">140</b> podría cotizarse como referencia o techo, pero no debería adjudicarse sin confirmar la necesidad adicional de Acid Labs.</p>
+    </div>
+
+    <h4 class="mini-title" style="margin-top:30px;">Resumen ejecutivo actualizado</h4>
+    <div class="quote-box">
+      <p>La proyección operacional sigue correspondiendo exclusivamente a Acid Labs: 100 equipos base y hasta 115 como techo prudente.</p>
+      <p>Se agregan 10 MacBook Air M5 de Core 2Brains como renovación confirmada e independiente.</p>
+      <p>Estos equipos no consumen contingencia ni modifican la demanda, stock o mix de Acid Labs.</p>
+      <p>El escenario base consolidado es de 110 equipos por $226,8 millones con IVA.</p>
+      <p>El escenario recomendado alcanza 125 equipos por $258,4 millones con IVA.</p>
+      <p>El escenario holgado alcanza 140 equipos por $290,1 millones con IVA.</p>
+      <p>Se recomienda contratar hasta 125, con una primera entrega firme de 110 y opción por 15 equipos Acid.</p>
+      <p>La negociación puede aprovechar el volumen conjunto, manteniendo propietarios y centros de costo separados.</p>
+      <p>Los pagos deberían asociarse a cada entrega y buscar un plazo de 60–90 días sin recargo.</p>
+      <p><b>Los 140 equipos sólo se justifican con demanda Acid adicional confirmada.</b></p>
+    </div>
+  </section>
+
+</div>
+
+<footer>
+  Informe generado a partir del análisis de Catastro Acid Labs · Corte al 30 de julio de 2026 · Uso interno TI / Compras / Finanzas
+</footer>
+
+<script>
+Chart.defaults.color = '#93a2c0';
+Chart.defaults.font.family = "Segoe UI, sans-serif";
+Chart.defaults.borderColor = 'rgba(255,255,255,0.06)';
+
+const fmtCLP = (v) => '$' + Math.round(v).toLocaleString('es-CL');
+
+// Mix inicial (130 equipos)
+new Chart(document.getElementById('chartMixInicial'), {
+  type: 'doughnut',
+  data: {
+    labels: ['MacBook Pro (75)', 'Windows (47)', 'MacBook Air (8)'],
+    datasets: [{ data: [75,47,8], backgroundColor: ['#5b9dff','#7c5cff','#ffb84d'], borderWidth: 0 }]
+  },
+  options: { plugins: { legend: { position: 'bottom', labels:{boxWidth:10,padding:14} } }, cutout:'62%' }
+});
+
+// Escenarios (85/100/115/130)
+new Chart(document.getElementById('chartEscenarios'), {
+  type: 'bar',
+  data: {
+    labels: ['Mínimo\noperacional','Compra\nrecomendada','Techo\npresupuestario','Escenario\nholgado'],
+    datasets: [{
+      label:'Equipos',
+      data:[85,100,115,130],
+      backgroundColor:['#93a2c0','#3ddc97','#5b9dff','#ffb84d'],
+      borderRadius:8, maxBarThickness:60
+    }]
+  },
+  options: {
+    plugins:{legend:{display:false}},
+    scales:{ y:{ beginAtZero:true, grid:{color:'rgba(255,255,255,.05)'} }, x:{ grid:{display:false} } }
+  }
+});
+
+// Mix corregido 55/35/10
+new Chart(document.getElementById('chartMixCorregido'), {
+  type:'doughnut',
+  data:{
+    labels:['MacBook Pro 55%','Windows 35%','MacBook Air 10%'],
+    datasets:[{data:[55,35,10], backgroundColor:['#5b9dff','#7c5cff','#ffb84d'], borderWidth:0}]
+  },
+  options:{ plugins:{legend:{position:'bottom',labels:{boxWidth:10,padding:14}}}, cutout:'62%' }
+});
+
+// Costo total (Neto/IVA apilado)
+new Chart(document.getElementById('chartCostoTotal'), {
+  type:'bar',
+  data:{
+    labels:['100 equipos','115 equipos','130 equipos'],
+    datasets:[
+      { label:'Neto', data:[178919690,205459572,232159671], backgroundColor:'#5b9dff', borderRadius:{topLeft:0,topRight:0,bottomLeft:6,bottomRight:6}, stack:'s' },
+      { label:'IVA', data:[33994741,39037319,44110337], backgroundColor:'#7c5cff', borderRadius:{topLeft:6,topRight:6,bottomLeft:0,bottomRight:0}, stack:'s' }
+    ]
+  },
+  options:{
+    plugins:{legend:{position:'bottom',labels:{boxWidth:10,padding:14}},
+      tooltip:{callbacks:{label:(c)=> c.dataset.label+': '+fmtCLP(c.raw)}}},
+    scales:{
+      y:{ beginAtZero:true, ticks:{ callback:(v)=> '$'+(v/1e6).toFixed(0)+'M' }, grid:{color:'rgba(255,255,255,.05)'} },
+      x:{ stacked:true, grid:{display:false} },
+    }
+  }
+});
+// fix stacked x for both datasets
+Chart.getChart('chartCostoTotal').options.scales.x.stacked = true;
+Chart.getChart('chartCostoTotal').options.scales.y.stacked = true;
+Chart.getChart('chartCostoTotal').update();
+
+// Stock final / cobertura
+new Chart(document.getElementById('chartStock'), {
+  data:{
+    labels:['100 equipos','115 equipos','130 equipos'],
+    datasets:[
+      { type:'bar', label:'Stock final (unidades)', data:[4,19,34], backgroundColor:'#3ddc97', borderRadius:8, yAxisID:'y', maxBarThickness:50 },
+      { type:'line', label:'Cobertura (meses)', data:[0.2,1.0,1.7], borderColor:'#ffb84d', backgroundColor:'#ffb84d', yAxisID:'y1', tension:.3, pointRadius:5 }
+    ]
+  },
+  options:{
+    plugins:{legend:{position:'bottom',labels:{boxWidth:10,padding:14}}},
+    scales:{
+      y:{ beginAtZero:true, position:'left', title:{display:true,text:'Unidades'}, grid:{color:'rgba(255,255,255,.05)'} },
+      y1:{ beginAtZero:true, position:'right', title:{display:true,text:'Meses'}, grid:{display:false} },
+      x:{ grid:{display:false} }
+    }
+  }
+});
+
+// Descuentos
+new Chart(document.getElementById('chartDescuentos'), {
+  type:'line',
+  data:{
+    labels:['0%','3%','5%','7%','10%'],
+    datasets:[
+      { label:'100 equipos', data:[212914431,206526998,202268710,198010421,191622988], borderColor:'#3ddc97', backgroundColor:'#3ddc97', tension:.3, pointRadius:4 },
+      { label:'115 equipos', data:[244496891,237161984,232272046,227382108,220047202], borderColor:'#5b9dff', backgroundColor:'#5b9dff', tension:.3, pointRadius:4 },
+      { label:'130 equipos', data:[276270008,267981908,262456508,256931108,248643008], borderColor:'#ffb84d', backgroundColor:'#ffb84d', tension:.3, pointRadius:4 }
+    ]
+  },
+  options:{
+    plugins:{legend:{position:'bottom',labels:{boxWidth:10,padding:14}},
+      tooltip:{callbacks:{label:(c)=> c.dataset.label+': '+fmtCLP(c.raw)}}},
+    scales:{
+      y:{ ticks:{ callback:(v)=> '$'+(v/1e6).toFixed(0)+'M' }, grid:{color:'rgba(255,255,255,.05)'} },
+      x:{ grid:{display:false} }
+    }
+  }
+});
+
+// Capital inmovilizado
+new Chart(document.getElementById('chartCapital'), {
+  type:'bar',
+  data:{
+    labels:['100 equipos','115 equipos','130 equipos'],
+    datasets:[{ label:'Capital neto inmovilizado', data:[7156788,33994741,60832695], backgroundColor:['#3ddc97','#5b9dff','#ffb84d'], borderRadius:8, maxBarThickness:60 }]
+  },
+  options:{
+    plugins:{legend:{display:false}, tooltip:{callbacks:{label:(c)=> fmtCLP(c.raw)}}},
+    scales:{
+      y:{ beginAtZero:true, ticks:{ callback:(v)=> '$'+(v/1e6).toFixed(0)+'M' }, grid:{color:'rgba(255,255,255,.05)'} },
+      x:{ grid:{display:false} }
+    }
+  }
+});
+
+// Pagos: comparación de esquemas (máximo desembolso mensual)
+new Chart(document.getElementById('chartPagos'), {
+  type:'bar',
+  data:{
+    labels:['100 equipos','115 equipos','130 equipos'],
+    datasets:[
+      { label:'Pago único (30/60/90 días)', data:[212914431,244496891,276270008], backgroundColor:'#ff6b6b', borderRadius:6, maxBarThickness:40 },
+      { label:'30% anticipo + 70% a 60 días', data:[149040102,171147824,193389006], backgroundColor:'#ffb84d', borderRadius:6, maxBarThickness:40 },
+      { label:'3 cuotas iguales', data:[70971477,81498964,92090003], backgroundColor:'#3ddc97', borderRadius:6, maxBarThickness:40 }
+    ]
+  },
+  options:{
+    plugins:{legend:{position:'bottom',labels:{boxWidth:10,padding:14}},
+      tooltip:{callbacks:{label:(c)=> c.dataset.label+': '+fmtCLP(c.raw)}}},
+    scales:{
+      y:{ beginAtZero:true, ticks:{ callback:(v)=> '$'+(v/1e6).toFixed(0)+'M' }, grid:{color:'rgba(255,255,255,.05)'} },
+      x:{ grid:{display:false} }
+    }
+  }
+});
+
+// Consolidado Acid vs Core 2Brains
+new Chart(document.getElementById('chartConsolidado'), {
+  type:'bar',
+  data:{
+    labels:['110 equipos\n(Base)','125 equipos\n(Recomendado)','140 equipos\n(Holgado)'],
+    datasets:[
+      { label:'Acid Labs', data:[212914431,244496891,276270008], backgroundColor:'#5b9dff', stack:'s', borderRadius:{topLeft:0,topRight:0,bottomLeft:6,bottomRight:6} },
+      { label:'Core 2Brains (10 MBA M5)', data:[13869248,13869248,13869248], backgroundColor:'#3ddc97', stack:'s', borderRadius:{topLeft:6,topRight:6,bottomLeft:0,bottomRight:0} }
+    ]
+  },
+  options:{
+    plugins:{legend:{position:'bottom',labels:{boxWidth:10,padding:14}},
+      tooltip:{callbacks:{label:(c)=> c.dataset.label+': '+fmtCLP(c.raw)}}},
+    scales:{
+      y:{ stacked:true, beginAtZero:true, ticks:{ callback:(v)=> '$'+(v/1e6).toFixed(0)+'M' }, grid:{color:'rgba(255,255,255,.05)'} },
+      x:{ stacked:true, grid:{display:false} }
+    }
+  }
+});
+
+// Tabs for discount simulation
+document.querySelectorAll('.tab-btn').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById(btn.dataset.tab).classList.add('active');
+  });
+});
+</script>
+
+</body>
+</html>
